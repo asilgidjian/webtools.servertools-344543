@@ -137,6 +137,13 @@ public class DeleteServerDialog extends MessageDialog {
 			}
 		}
 		
+		List<DeleteServerDialogExtension> dialogExtensionLst = ServerUIPlugin.getDeleteServerDialogExtensions();
+		// Add the dialog extension UI. 
+		for (DeleteServerDialogExtension curDialogExtension : dialogExtensionLst) {
+			curDialogExtension.setServers(servers);
+			curDialogExtension.createControl(composite);
+		}
+		
 		Dialog.applyDialogFont(composite);
 		
 		return composite;
@@ -164,6 +171,11 @@ public class DeleteServerDialog extends MessageDialog {
 							try {
 								if (monitor.isCanceled())
 									return Status.CANCEL_STATUS;
+								
+								List<DeleteServerDialogExtension> dialogExtensionLst = ServerUIPlugin.getDeleteServerDialogExtensions();
+								for (DeleteServerDialogExtension curDialogExtension : dialogExtensionLst) {
+									curDialogExtension.performCustomCleanup(monitor);
+								}
 								
 								int size = servers.length;
 								for (int i = 0; i < size; i++)
